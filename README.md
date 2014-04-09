@@ -21,16 +21,16 @@ Before the installation, please make sure that your web server meets the require
 安装步骤：
 
 1. 把所有文件上传到安装目录下。
-- 通过浏览器访问您的站点，LogX 会自动显示安装界面。
-- 按照提示输入所需的信息。
-- 完成！  
+2. 通过浏览器访问您的站点，LogX 会自动显示安装界面。
+3. 按照提示输入所需的信息。
+4. 完成！  
 
 Installation Steps:
 
 1. Upload all files to the installation directory.
-- Use any browser to visit your website, LogX will show the installation interface automatically.
-- Follow the tips and input the required information.
-- Done！
+2. Use any browser to visit your website, LogX will show the installation interface automatically.
+3. Follow the tips and input the required information.
+4. Done！
 
 ## 感谢 & Thanks
 
