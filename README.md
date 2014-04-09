@@ -23,7 +23,7 @@ Before the installation, please make sure that your web server meets the require
 > 1. 把所有文件上传到安装目录下。
 > - 通过浏览器访问您的站点，LogX 会自动显示安装界面。
 > - 按照提示输入所需的信息。
-> - 完成！
+> - 完成！  
 
 > 1. Upload all files to the installation directory.
 > - Use any browser to visit your website, LogX will show the installation interface automatically.
@@ -36,13 +36,13 @@ LogX 受益于以下项目、团体或个人。谨向他们表示感谢！
 
 LogX received benefits from follow projects, teams or persons. I'd like to express my gratitude!
 
-[JQuery](http://jquery.com/)
-[KindEditor](http://www.kindsoft.net/)
-[PHPMailer](http://phpmailer.sourceforge.net/)
-[WordPress](http://wordpress.org/)
-[Habari](http://habariproject.org/)
-[Typecho](http://typecho.org/)
-[PJBlog](http://www.pjhome.net/)
-[JBlog](http://www.lisijie.org/)
-[mg12](http://www.neoease.com/)
-[Prower](http://www.prower.cn/)
+[JQuery](http://jquery.com/)  
+[KindEditor](http://www.kindsoft.net/)  
+[PHPMailer](http://phpmailer.sourceforge.net/)  
+[WordPress](http://wordpress.org/)  
+[Habari](http://habariproject.org/)  
+[Typecho](http://typecho.org/)  
+[PJBlog](http://www.pjhome.net/)  
+[JBlog](http://www.lisijie.org/)  
+[mg12](http://www.neoease.com/)  
+[Prower](http://www.prower.cn/)  
