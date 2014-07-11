@@ -66,6 +66,8 @@ class Response {
 		$client_time = isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ? strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) : 0;
 		$now = time();
 		$now_list = time() - 60 * $m ;
+		@header("Cache-Control: max-age=".(60 * $m));
+		@header('Expires: '.gmdate('D, d M Y H:i:s', $now + (60 * $m)).' GMT');
 		if ( $client_time < $now && $client_time > $now_list ) {
 			@header('Last-Modified: '.gmdate('D, d M Y H:i:s', $client_time).' GMT', true, 304);
 			exit(0);
