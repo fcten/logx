@@ -120,7 +120,7 @@ class UserWidget extends Widget {
 	}
 
 	/**
-	 * @brief isEditor 判断当前用户是否为管理员
+	 * @brief isEditor 判断当前用户是否为编辑
 	 *
 	 * @return bool
 	 */
