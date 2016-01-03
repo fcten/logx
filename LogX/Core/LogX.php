@@ -409,8 +409,8 @@ class LogX {
 				}
 				if ($wordend==false) {
 					$outstr.=$value;
-					if (!preg_match("/<img([^>]+?)>/is",$value) && !preg_match("/<param([^>]+?)>/is",$value) && !preg_match("/<!([^>]+?)>/is",$value) && !preg_match("/<br([^>]+?)>/is",$value) && !preg_match("/<hr([^>]+?)>/is",$value)) {
-						// 除img,br,hr外的标签都加1
+					if (!preg_match("/<img([^>]*?)>/is",$value) && !preg_match("/<param([^>]*?)>/is",$value) && !preg_match("/<!([^>]+?)>/is",$value) && !preg_match("/<br([^>]*?)>/is",$value) && !preg_match("/<hr([^>]*?)>/is",$value)) {
+						// 除img,param,br,hr外的标签都加1
 						$beginTags++;
 					}
 				} else if (preg_match("/<\/([^>]+?)>/is",$value,$matches)) {
@@ -419,8 +419,8 @@ class LogX {
 					// 字已载完了，并且标签数相称，就可以退出循环。
 					if ($beginTags==$endTags && $wordend==true) break;
 				} else {
-					if (!preg_match("/<img([^>]+?)>/is",$value) && !preg_match("/<param([^>]+?)>/is",$value) && !preg_match("/<!([^>]+?)>/is",$value) && !preg_match("/<br([^>]+?)>/is",$value) && !preg_match("/<hr([^>]+?)>/is",$value)) {
-						// 除img,br,hr外的标签都加1
+					if (!preg_match("/<img([^>]*?)>/is",$value) && !preg_match("/<param([^>]*?)>/is",$value) && !preg_match("/<!([^>]+?)>/is",$value) && !preg_match("/<br([^>]*?)>/is",$value) && !preg_match("/<hr([^>]*?)>/is",$value)) {
+						// 除img,param,br,hr外的标签都加1
 						$beginTags++;
 						$outstr.=$value;
 					}
