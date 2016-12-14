@@ -9,15 +9,22 @@
 
 class OptionLibrary extends Library {
 
+    private static $cache = array();
+
 	/**
 	 * @brief get 获取选项值
 	 *
 	 * @param $name 选项名
+	 * @param $cache 是否使用 cache
 	 *
 	 * @return mix
 	 */
-	public static function get( $name ) {
-		return Database::result("SELECT `value` FROM `".DB_PREFIX."options` WHERE `name`='{$name}'");
+	public static function get( $name, $cache = TRUE ) {
+	    if( !$cache || !isset( self::$cache[$name] ) ) {
+	        self::$cache[$name] = Database::result("SELECT `value` FROM `".DB_PREFIX."options` WHERE `name`='{$name}'");
+	    }
+	    
+		return self::$cache[$name];
 	}
 
 	/**
@@ -29,6 +36,8 @@ class OptionLibrary extends Library {
 	 * @return void
 	 */
 	public static function set( $name, $value ) {
+	    self::$cache[$name] = $value;
+	
 		return Database::query("UPDATE `".DB_PREFIX."options` SET `value`='{$value}' WHERE `name`='{$name}'");
 	}
 
@@ -42,7 +51,7 @@ class OptionLibrary extends Library {
 	 * @return bool
 	 */
 	public static function add( $name, $value, $global = 0 ) {
-		if( self::get( $name ) !== NULL ) {
+		if( self::get( $name, FALSE ) !== NULL ) {
 			return FALSE;
 		}
 		return Database::query("INSERT INTO `".DB_PREFIX."options` (`bid`,`name`,`value`,`global`) VALUES (1,'{$name}','{$value}',{$global})");
