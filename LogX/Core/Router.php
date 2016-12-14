@@ -190,9 +190,9 @@ class Router {
 				}
 				self::$_currentParams = $params;
 				if( isset( $route['widget'] ) ) {
-					Widget::getWidget( $route['widget'] )->$route['method']( $params );
+					Widget::getWidget( $route['widget'] )->{$route['method']}( $params );
 				} elseif( isset( $route['plugin'] ) ) {
-					Plugin::getPlugin( $route['plugin'] )->$route['method']( $params );
+					Plugin::getPlugin( $route['plugin'] )->{$route['method']}( $params );
 				}
 				return;
 			}

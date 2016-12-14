@@ -43,7 +43,7 @@ switch( Request::G('step') ) {
 		if ( !version_compare( PHP_VERSION, '5.0.0', '>=' ) ) {
 			$result = FALSE;
 		}
-		if ( !function_exists('mysql_connect') ) {
+		if ( !function_exists('mysqli_connect') ) {
 			$result = FALSE;
 		}
 		if( !$result ) {
@@ -57,7 +57,7 @@ switch( Request::G('step') ) {
 		<table class="datatable">
 			<tr style="font-weight:bold;"><td>名称</td><td>是否必须</td><td>说明</td><td>检测结果</td></tr>
 			<tr><td><strong>PHP 版本</strong></td><td>是</td><td>LogX 无法在 PHP 5 之前的旧版本 PHP 环境下运行</td><td><?php if ( version_compare( PHP_VERSION, '5.0.0', '>=' ) ) { ?><font color="blue">OK</font><?php } else { ?><font color="red">Failed</font><?php } ?></td></tr>
-			<tr><td><strong>MySQL 支持</strong></td><td>是</td><td>LogX 目前只支持 MySQL 一种数据库类型</td><td><?php if ( function_exists('mysql_connect') ) { ?><font color="blue">OK</font><?php } else { ?><font color="red">Failed</font><?php } ?></td></tr>
+			<tr><td><strong>MySQL 支持</strong></td><td>是</td><td>LogX 目前只支持 MySQL 一种数据库类型</td><td><?php if ( function_exists('mysqli_connect') ) { ?><font color="blue">OK</font><?php } else { ?><font color="red">Failed</font><?php } ?></td></tr>
 			<tr><td><strong>GD 库</strong></td><td>否</td><td>为您的 LogX 提供图像处理支持</td><td><?php if ( function_exists('imagecreate') ) { ?><font color="blue">OK</font><?php } else { ?><font color="red">Failed</font><?php } ?></td></tr>
 		</table>
 
@@ -181,11 +181,11 @@ switch( Request::G('step') ) {
 			if( !$db['host'] || !$db['user'] || !$db['name'] || !$db['prefix'] ) {
 				showError('<strong>您的填写不完整</strong><br />除了数据库密码之外的项目都是必填项目。','install.php?step=2');
 			} else {
-				if ( !$link = @mysql_connect( $db['host'], $db['user'], $db['pw'] ) ) {
-					showError( '<strong>尝试连接到数据库失败</strong><br />请检查数据库是否正常启动，以及数据库地址、数据库用户名、数据库密码等信息是否正确！','install.php?step=2' );
+				if ( !$link = @mysqli_connect( $db['host'], $db['user'], $db['pw'] ) ) {
+					showError( '<strong>尝试连接到数据库失败</strong><br />'.mysqli_connect_error(),'install.php?step=2' );
 				} else {
-					if ( !@mysql_select_db( $db['name'], $link) ) {
-						if ( !@mysql_query("CREATE DATABASE `{$db['name']}`", $link) ) {
+					if ( !@mysqli_select_db( $link, $db['name'] ) ) {
+						if ( !@mysqli_query( $link, "CREATE DATABASE `{$db['name']}`" ) ) {
 							showError( '<strong>指定的数据库不存在</strong><br />您指定的数据库不存在，而且数据库用户没有创建该数据库的权限。','install.php?step=2' );
 						}
 					}

@@ -19,105 +19,150 @@ class Database {
 
 	public static $sql = array();
 
-	public static $buffer = array();
+	private static $_trans_times = 0;
 
-	public static function connect($host,$user,$pwd,$dbname,$pconnect = false) {
-		self::$link = $pconnect ? @mysql_pconnect($host,$user,$pwd) : @mysql_connect($host,$user,$pwd);
+	public static function connect($host,$user,$pwd,$dbname) {
+		self::$link = mysqli_connect($host,$user,$pwd,$dbname);
 		if ( !self::$link ) {
 			self::halt("Can't connect to database!");
 		}
-		if ( !mysql_select_db($dbname, self::$link) ) {
-			self::halt("Can't use database {$dbname}！");
-		}
 		if (self::version() > '4.1') {
-			mysql_query('SET NAMES utf8;',self::$link);
+			mysqli_query(self::$link, 'SET NAMES utf8;');
 		}
 	}
 
-	public static function query($sql, $cache = true, $unbuffer = false ) {
-		if( $cache && isset( self::$buffer[$sql] ) ) {
-			$query = self::$buffer[$sql];
-		} else {
-			$runtime = microtime( TRUE );
-			if ( $unbuffer && function_exists('mysql_unbuffered_query') ) {
-				$query = @mysql_unbuffered_query($sql, self::$link);
-			} else {
-				$query = self::$buffer[$sql] = @mysql_query($sql,self::$link);
-			}
-			$runtime = microtime( TRUE ) - $runtime;
-			//[DEBUG]
-			if( defined( 'LOGX_DEBUG' ) ) {
-				Log::add( 'SQL: ' . $sql . ' TIME: ' . number_format( $runtime, 4 ) * 1000 . 'ms.', E_USER_WARNING );
-			}
-			//[/DEBUG]
-			self::$querynum ++;
-			self::$querytime += $runtime;
+	public static function query($sql) {
+		$runtime = microtime( TRUE );
+		$query = mysqli_query(self::$link, $sql);
+		$runtime = microtime( TRUE ) - $runtime;
+		//[DEBUG]
+		if( defined( 'LOGX_DEBUG' ) ) {
+			Log::add( 'SQL: ' . $sql . ' TIME: ' . number_format( $runtime, 4 ) * 1000 . 'ms.', E_USER_WARNING );
 		}
+		//[/DEBUG]
+		self::$querynum ++;
+		self::$querytime += $runtime;
+
 		!$query && self::halt('SQL Error！',$sql);
 		return $query;
 	}
 
-	private static function fetchArray($query,$result_type = MYSQL_ASSOC) {
-		return mysql_fetch_array($query,$result_type);
+	private static function fetchArray($query,$result_type = MYSQLI_ASSOC) {
+		return mysqli_fetch_array($query,$result_type);
 	}
 
-	public static function fetchOneArray($sql,$cache = true) {
-		$query = self::query($sql,$cache);
+	public static function fetchOneArray($sql) {
+		$query = self::query($sql);
 		if( $result = self::fetchArray($query) ) {
-			mysql_data_seek($query, 0);
+			mysqli_data_seek($query, 0);
 		}
 		return $result;
 	}
 
-	public static function fetchAll($sql,$cache = true) {
+	public static function result($sql) {
+		$data = self::fetchOneArray( $sql );
+		if ($data) {
+		    $tmp = @array_keys( $data );
+			return $data[ @reset($tmp) ];
+		} else {
+			return false;
+		}
+	}
+
+	public static function fetchAll($sql) {
 		$result = array();
-		$query = self::query($sql,$cache);
+		$query = self::query($sql);
 		while($row = self::fetchArray($query)) {
 			$result[] = $row;
 		}
 		if( count($result) ) {
-			mysql_data_seek($query, 0);
+			mysqli_data_seek($query, 0);
 		}
 		return $result;
 	}
 
-	public static function result($sql,$cache = true, $row = 0) {
-		$query = self::query($sql,$cache);
-		if( @mysql_num_rows( $query ) > 0 ) {
-			return @mysql_result( $query, $row );
-		}
-	}
-
 	public static function freeResult($query) {
-		return mysql_free_result($query);
+		return mysqli_free_result($query);
 	}
 
 	public static function insertId() {
-		return ($id = mysql_insert_id(self::$link)) >= 0 ? $id : self::result(self::query("SELECT last_insert_id()",false), 0);
+		return ($id = mysqli_insert_id(self::$link)) >= 0 ? $id : self::result(self::query("SELECT last_insert_id()",false), 0);
 	}
 
 	public static function numFields($query) {
-		return mysql_num_fields($query);
+		return mysqli_num_fields($query);
 	}
 
 	public static function numRows($query) {
-		return mysql_num_rows($query);
+		return mysqli_num_rows($query);
 	}
 
 	public static function affectedRows() {
-		return mysql_affected_rows(self::$link);
+		return mysqli_affected_rows(self::$link);
 	}
 
 	public static function close() {
-		return @mysql_close(self::$link);
+		return @mysqli_close(self::$link);
 	}
 
 	public static function version() {
-		return mysql_get_server_info(self::$link);
+		return mysqli_get_server_info(self::$link);
 	}
 
+	public static function escape( $str ) {
+		return mysqli_real_escape_string(self::$link, $str);
+	}
+	
+    /**
+     * 启动事务
+     * @access public
+     * @return void
+     */
+    public static function startTrans() {
+        //数据rollback 支持
+        if (self::$_trans_times == 0) {
+            mysqli_query(self::$link, 'START TRANSACTION');
+        }
+        self::$_trans_times ++;
+        return ;
+    }
+
+    /**
+     * 用于非自动提交状态下面的查询提交
+     * @access public
+     * @return boolean
+     */
+    public static function commit() {
+        if ( self::$_trans_times > 0 ) {
+            $result = mysqli_query(self::$link, 'COMMIT');
+            self::$_trans_times = 0;
+            if(!$result){
+                self::halt("Commit failed！");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 事务回滚
+     * @access public
+     * @return boolean
+     */
+    public static function rollback() {
+        if ( self::$_trans_times > 0 ) {
+            $result = mysqli_query(self::$link, 'ROLLBACK');
+            self::$_trans_times = 0;
+            if(!$result){
+                self::halt("Rollback failed！");
+                return false;
+            }
+        }
+        return true;
+    }
+
 	public static function halt($msg = '',$sql = '') {
-		$output = $msg.'<br /><br />Error SQL：'.$sql.'<br />Error Code：'.mysql_errno().'<br />Error Tips：'.mysql_error();
+		$output = $msg.'<br /><br />Error SQL：'.$sql.'<br />Error Code：'.mysqli_errno().'<br />Error Tips：'.mysqli_error();
 		Response::error( _t('Database Error'), $output );
 	}
 
