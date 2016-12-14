@@ -19,7 +19,7 @@ display('inc/header.php');
 			<p class="entry_data">
 				<span><?php _e('Author'); ?>：<?php post_author(); ?></span>
 				<span><?php _e('Date'); ?>：<?php post_date('F j, Y'); ?></span>
-				<span><?php _e('Category'); ?>：<?php post_category(','); ?></span>
+				<span><?php _e('Category'); ?>：<?php post_category(); ?></span>
 				<a href="<?php post_link(); ?>#comments"><?php post_comment('No Comments', '1 Comment', '%d Comments'); ?></a>
 			</p>
 			<?php post_content(500); ?>

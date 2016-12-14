@@ -652,6 +652,20 @@ class PostWidget extends Widget {
 	}
 
 	/**
+	 * @brief postIsSticky 判断是否为置顶文章
+	 *
+	 * @return bool
+	 */
+	public function postIsSticky() {
+		// 检查是否有文章
+		if( !$this->postHave() ) {
+			return;
+		}
+
+		return $this->posts[$this->currentPost-1]['top'];
+	}
+
+	/**
 	 * @brief postPath 输出文章路径
 	 *
 	 * @return void
@@ -983,4 +997,8 @@ function post_allow_reply() {
 
 function post_path() {
 	return Widget::getWidget('Post')->postPath();
+}
+
+function post_is_sticky() {
+	return Widget::getWidget('Post')->postIsSticky();
 }
