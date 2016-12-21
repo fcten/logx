@@ -7,9 +7,6 @@ if( $pid = Request::G('pid') ):
 	$p = $post->getPage( $pid, FALSE );
 ?>
 		<form action="<?php path(array('do'=>'editPage'),'AdminDo'); ?>" method="post" name="add_post" id="add-post">
-			<div id="add-post-left">
-				<textarea style="height: 440px;width:550px;" autocomplete="off" id="add-post-content" name="content"><?php echo $p['content']; ?></textarea>
-			</div>
 			<div id="add-post-right">
 				<ul id="add-post-option">
 				<li>
@@ -56,14 +53,14 @@ if( $pid = Request::G('pid') ):
 				</li>
 				</ul>
 			</div>
+			<div id="add-post-left">
+				<textarea autocomplete="off" id="add-post-content" name="content"><?php echo $p['content']; ?></textarea>
+			</div>
 		</form>
 <?php
 else:
 ?>
 		<form action="<?php path(array('do'=>'addPage'),'AdminDo'); ?>" method="post" name="add_post" id="add-post">
-			<div id="add-post-left">
-				<textarea style="height: 440px;width:550px;" autocomplete="off" id="add-post-content" name="content"></textarea>
-			</div>
 			<div id="add-post-right">
 				<ul id="add-post-option">
 				<li>
@@ -101,6 +98,9 @@ else:
 					<input type="submit" id="add-post-submit" value="<?php _e('Add Page'); ?>" />
 				</li>
 				</ul>
+			</div>
+			<div id="add-post-left">
+				<textarea autocomplete="off" id="add-post-content" name="content"></textarea>
 			</div>
 		</form>
 <?php

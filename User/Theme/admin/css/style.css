@@ -31,11 +31,11 @@ textarea:focus, input:focus {
 	background: #E8EFF6;
 	border-bottom:2px solid #708EB0;
 	height:55px;
+	min-width:980px;
 }
 
 #menu {
-	margin:0 auto;
-	width:960px;
+	margin:0 10px;
 }
 
 #logo {
@@ -214,24 +214,24 @@ textarea:focus, input:focus {
 #content {
 	background: #F6F8FF;
 	min-height:450px;
-	margin:0 auto;
+	min-width:980px;
 	padding-top:10px;
 }
 
 #content-in {
-	margin:0 auto;
-	width:960px;
+	margin:0 10px;
+
 }
 
 #foot {
 	border-top:2px solid #708EB0;
 	background: #E8EFF6;
 	height:40px;
+	min-width:980px;
 }
 
 #foot-in {
-	margin:0 auto;
-	width:960px;
+	margin:0 10px;
 	color:#999;
 	font-size:12px;
 	padding-top:10px;
@@ -248,13 +248,18 @@ textarea:focus, input:focus {
 .box {
 	padding-left:5px;
 	padding-right:5px;
+	-moz-box-sizing: border-box; /*Firefox3.5+*/
+    -webkit-box-sizing: border-box; /*Safari3.2+*/
+    -o-box-sizing: border-box; /*Opera9.6*/
+    -ms-box-sizing: border-box; /*IE8*/
+    box-sizing: border-box;
 }
 .box-small {
-	width:310px;
+	width:33%;
 	float:left;
 }
 .box-middle {
-	width:470px;
+	width:50%;
 	float:left;
 }
 .box-title, #login-tips {
@@ -539,11 +544,17 @@ textarea:focus, input:focus {
 	line-height:16px;
 }
 #add-post-left {
-	float:left;
+	margin-right:380px;
+}
+#add-post-left textarea{
+    min-height:420px;
+    width:100%;
+    padding: 0;
+    margin: 0;
 }
 #add-post-right {
 	width:370px;
-	float:right;
+	float: right;
 }
 #add-post-option {
 	list-style:none;

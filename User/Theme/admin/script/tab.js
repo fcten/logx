@@ -100,7 +100,7 @@ function initMenu() {
 		$(this).hover(function(){
 			if( $(this).children(':first-child').attr('href') == '#' ) {
 				$.doTimeout( 'panel_hide' );
-				$.doTimeout( 'panel_show', 500, function(){
+				$.doTimeout( 'panel_show', 100, function(){
 					self.children('div').slideDown();
 					return false;
 				});
@@ -108,7 +108,7 @@ function initMenu() {
 		},function(){
 			if( $(this).children(':first-child').attr('href') == '#' ) {
 				$.doTimeout( 'panel_show' );
-				$.doTimeout( 'panel_hide', 500, function(){
+				$.doTimeout( 'panel_hide', 100, function(){
 					self.children('div').slideUp();
 					return false;
 				});
